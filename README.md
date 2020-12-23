@@ -1,6 +1,3 @@
-# docker-42c-apifirewall - POC/Demo
-
-**WIP**
 **WIP**
 In this demonstration I will show how to protect basic Microsevices using Micro-APIFirewall. In our case, we have a basic SpringBoot app that is fully audited, scanned and protected by 42Crunch platform.
 
@@ -35,3 +32,21 @@ The first thing we have to do is to go in the 42Crunch platform, and configure t
 
 As you noticed, you configuration had generated a token, we will must use this later. 
 
+## The Dockerfile
+As we have many environment variables to pass to the docker image, it is must easier to extend the standard 42Crunch image, and add your whole configurations, as I did in the following code listing: 
+```
+   1  FROM 42crunch/apifirewall:latest
+   2  COPY ./cert/*.pem /opt/guardian/conf/ssl/
+   3  COPY ./cert/*.key /opt/guardian/conf/ssl/
+   4  ENV PROTECTION_TOKEN=384f00d7-f547-42cb-8871-3630a843b13f
+   5  ENV SERVER_NAME=localhost
+   6  ENV LISTEN_PORT=443
+   7  ENV TARGET_URL=https://lbspring.42crunch-ns.207.244.225.188.xip.io/42crunch-auth0
+   8  #ENV LISTEN_NO_TLS=1
+   9  ENV LISTEN_SSL_CERT=fullchain-cert-with-ca.pem
+  10  ENV LISTEN_SSL_KEY=localhost.key
+  11  ENV GUARDIAN_INSTANCE_NAME=springboot-sample
+  12  ENV LOG_LEVEL=debug
+  13  ENV ERROR_LOG_LEVEL=debug
+ ``` 
+eeee
