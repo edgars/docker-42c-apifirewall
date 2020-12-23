@@ -1,0 +1,167 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+
+    "security": [
+            { "OAuth2": [] }
+        ]
+    ,
+    "servers": [
+        {
+            "url": "https://localhost/42crunch-auth0",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/login/token": {
+            "post": {
+                "tags": [
+                    "rest-controller"
+                ],
+                "operationId": "loginWithToken",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "maxLength": 500,
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+         
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/xls": {
+            "get": {
+                "tags": [
+                    "rest-controller"
+                ],
+                "operationId": "xlsHome",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "maxLength": 500,
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+         
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/proxy": {
+            "get": {
+                "tags": [
+                    "rest-controller"
+                ],
+                "operationId": "proxyURI",
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 500,
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+             
+                   
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "additionalProperties": false,
+                                    "maxLength": 10,
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                     
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ads": {
+            "get": {
+                "tags": [
+                    "rest-controller"
+                ],
+                "operationId": "protectedMethod",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DecoratedResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "OAuth2": {
+                "type": "oauth2",
+                "flows": {
+                    "authorizationCode": {
+                        "scopes": {
+                            "readOnly": "read objects in your account"
+                        },
+                        "authorizationUrl": "https://example.com/oauth/authorize",
+                        "tokenUrl": "https://example.com/oauth/token" 
+                    }
+                }
+           
+        }
+    },
+        "schemas": {
+            "DecoratedResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+
+
+                    },
+                    "httpCode": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "type": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+
+                    }
+                }
+            }
+        }
+    }
+}
