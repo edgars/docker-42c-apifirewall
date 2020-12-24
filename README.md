@@ -53,4 +53,21 @@ The API Firewall will protect a simple SpringBoot service .
 
 *`Tip: awk  '{printf("% 4d  %s\n", NR, $0)}'  Dockerfile (for printing line numbers)`* 
 
+API Firewall running:
+![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/firewall_running.png?raw=true)
+
+Invoking API Firewall and getting an error in that layer:
+![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/firewall_curl.png?raw=true)
+
+Tracing the request in 42Crunch Dashboard:
+![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/Firewall_running_dashboard.png?raw=true)
+
+## To-Do
+
+ - [ ] Investigate the https and certificates 
+ - [ ] Automatize this whole demo
+
+### Important Docker Commands
+
+    docker exec -it <Container_ID> sh
 
