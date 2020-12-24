@@ -1,5 +1,3 @@
-# docker-42c-apifirewall - POC/Demo
-
 **WIP**
 In this demonstration I will show how to protect basic Microsevices using Micro-APIFirewall. In our case, we have a basic SpringBoot app that is fully audited, scanned and protected by 42Crunch platform.
 
@@ -22,4 +20,33 @@ The number one bullet is related to how secure is you API to go live, it means: 
 
 The Audit Score above is ok in order to be pushed to production. Don't forget, that those Security verifications can be done during the API designing phase, yet using your preferred IDE, or even using your CI/CD pipeline tool, such as Bitbucket, Jenskins, Azure, Bamboo and others. 
 
+Companies from anywhere in the world can introduce security best-practices in their entire APIs and Microservices development life-cycle, in many different architectures. 
+![enter image description here](https://github.com/edgars/docker-42c-apifirewall/raw/main/images/flow-with-42crunch.png)
+## Focusing on API Firewall
 
+The first thing we have to do is to go in the 42Crunch platform, and configure the API Firewall to some specific(s) API(s), when we do that, we can get a token in order to connect the on-premises Micro API Firewall to the 42Crunch platform running on cloud.  You have to the 42Crunch Console's left main menu in the option **Protect**, a Popup will show up, and you will have to select the API from an existing collection that you want to protect.  Here a basic demonstration if you have a collection ready to be protected by the API Firewall *(keep in mind that just APIs with a score of more than 70 can be protected by the API Firewall).* 
+
+![Parte 1](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/configure-scan.gif?raw=true)
+
+![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/configure-scan_part2.gif?raw=true)
+
+As you noticed, you configuration had generated a token, we will must use this later. 
+
+## The Dockerfile
+As we have many environment variables to pass to the docker image, it is must easier to extend the standard 42Crunch image, and add your whole configurations, as I did in the following code listing: 
+```
+   1  FROM 42crunch/apifirewall:latest
+   2  COPY ./cert/*.pem /opt/guardian/conf/ssl/
+   3  COPY ./cert/*.key /opt/guardian/conf/ssl/
+   4  ENV PROTECTION_TOKEN=384f00d7-f547-42cb-8871-3630a843b13f
+   5  ENV SERVER_NAME=localhost
+   6  ENV LISTEN_PORT=443
+   7  ENV TARGET_URL=https://lbspring.42crunch-ns.207.244.225.188.xip.io/42crunch-auth0
+   8  #ENV LISTEN_NO_TLS=1
+   9  ENV LISTEN_SSL_CERT=fullchain-cert-with-ca.pem
+  10  ENV LISTEN_SSL_KEY=localhost.key
+  11  ENV GUARDIAN_INSTANCE_NAME=springboot-sample
+  12  ENV LOG_LEVEL=debug
+  13  ENV ERROR_LOG_LEVEL=debug
+ ``` 
+eeee
