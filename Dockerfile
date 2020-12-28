@@ -6,3 +6,6 @@ COPY ./cert-2/myapis.docker.local/*.key /opt/guardian/conf/ssl/
 
 #docker build -t edgars/apifirewall .
 #docker run -p 8443:443 edgars/apifirewall
+
+
+
