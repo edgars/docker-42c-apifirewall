@@ -41,7 +41,7 @@ As we have many environment variables to pass to the docker image, it is must ea
    4  ENV PROTECTION_TOKEN=384f00d7-f547-42cb-8871-3630a843b13f
    5  ENV SERVER_NAME=localhost
    6  ENV LISTEN_PORT=443
-   7  ENV TARGET_URL=https://lbspring.42crunch-ns.207.244.225.188.xip.io/42crunch-auth0
+   7  ENV TARGET_URL=https://localhost:8080/42crunch-auth0
    8  #ENV LISTEN_NO_TLS=1
    9  ENV LISTEN_SSL_CERT=fullchain-cert-with-ca.pem
   10  ENV LISTEN_SSL_KEY=localhost.key
@@ -49,4 +49,25 @@ As we have many environment variables to pass to the docker image, it is must ea
   12  ENV LOG_LEVEL=debug
   13  ENV ERROR_LOG_LEVEL=debug
  ``` 
-eeee
+The API Firewall will protect a simple SpringBoot service .
+
+*`Tip: awk  '{printf("% 4d  %s\n", NR, $0)}'  Dockerfile (for printing line numbers)`* 
+
+API Firewall running:
+![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/firewall_running.png?raw=true)
+
+Invoking API Firewall and getting an error in that layer:
+![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/firewall_curl.png?raw=true)
+
+Tracing the request in 42Crunch Dashboard:
+![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/Firewall_running_dashboard.png?raw=true)
+
+## To-Do
+
+ - [ ] Investigate the https and certificates 
+ - [ ] Automatize this whole demo
+
+### Important Docker Commands
+
+    docker exec -it <Container_ID> sh
+
