@@ -12,24 +12,17 @@ jobs:
       -
         name: Gen dummy page
         run: |
-          mkdir public
-          cat > public/index.html <<EOL
-          <!doctype html>
-          <html>
-            <head>
-              <title>GitHub Pages deployed!</title>
-            </head>
-            <body>
-              <p>GitHub Pages with <strong>${{ github.sha }}</strong> commit ID has been deployed through <a href="https://github.com/marketplace/actions/github-pages">GitHub Pages action</a> successfully.</p>
-            </body>
-          </html>
-          EOL
+          git clone https://github.com/edgars/docker-42c-apifirewall.git
+          cd docker-42c-apifirewall
+          cp README.md index.md
+          git checkout gh-pages
+          git add .
+          git commit 'building new page'
+          git push origin gh-pages
+          
       -
         name: Deploy to GitHub Pages
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
-        with:
-          target_branch: gh-pages
-          build_dir: public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
