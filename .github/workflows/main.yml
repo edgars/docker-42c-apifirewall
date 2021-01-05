@@ -5,24 +5,4 @@ on: push
 jobs:
   publish:
     runs-on: ubuntu-latest
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v2
-      -
-        name: Gen dummy page
-        run: |
-          git clone https://github.com/edgars/docker-42c-apifirewall.git
-          cd docker-42c-apifirewall
-          cp README.md index.md
-          git checkout gh-pages
-          git add .
-          git commit 'building new page'
-          git push origin gh-pages
-          
-      -
-        name: Deploy to GitHub Pages
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
