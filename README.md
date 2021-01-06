@@ -46,7 +46,7 @@ Companies from anywhere in the world can introduce security best-practices in th
 
 ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/raw/main/images/flow-with-42crunch.png)
 
-## Step 1: Focusing on API Firewall
+## Focusing on API Firewall
 In this demo we will focus on the **API Firewall** (Guardian). The first thing we have to do is to go in the 42Crunch platform, and configure the [API Firewall to some specific(s) API(s)](https://42crunch.com/micro-api-firewall-protection), when we do that, we can get a token in order to connect the on-premises Micro API Firewall to the 42Crunch platform running on cloud. You have to the 42Crunch Console's left main menu in the option **Protect**, a Popup will show up, and you will have to select the API from an existing collection that you want to protect. Here a basic demonstration if you have a collection ready to be protected by the API Firewall *(keep in mind that just APIs with a score of more than 70 can be protected by the API Firewall).*
 
   
@@ -63,7 +63,7 @@ As you noticed, you configuration had generated a token, we will must use this l
 
   
 
-## Step 2: The Dockerfile
+## Preparing The Dockerfile
 
 We will extend the 42Crunch's default image in order to pass the certificate files as you can see in the following code listing:
 
@@ -99,12 +99,13 @@ The API Firewall will protect a simple SpringBoot service that is deployed into 
 
 *`Tip: awk '{printf("% 4d %s\n", NR, $0)}' Dockerfile (for printing line numbers)`*
 
-## Step 3: Running the Firewall 
+## Running the API Firewall 
 
 Let's execute the API Firewall running first the 
 
 ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/firewall_running.png?raw=true)
 
+  
 
 Invoking API Firewall and getting an error in that layer:
 
@@ -117,7 +118,6 @@ Tracing the request in 42Crunch Dashboard:
 ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/Firewall_running_dashboard.png?raw=true)
 
   
-
 
 ### Important Docker Commands
 
@@ -223,7 +223,7 @@ That will be result, even if you API is not handling properly the resources and 
 
 | UUID | Same UUID in the 42Crunch Console |
 |:--------:| :--------:|
-| 2bfdd66b-0151-4349-bd28-b45e6232f7a3 | ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/demo-firewall_ok.png?raw=true) |
+| 2bfdd66b-0151-4349-bd28-b45e6232f7a3 | right-aligned |
 
 > Happy Demo/POC
 
