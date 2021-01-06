@@ -63,7 +63,7 @@ As you noticed, you configuration had generated a token, we will must use this l
 
   
 
-## Preparing The Dockerfile
+## The Dockerfile
 
 We will extend the 42Crunch's default image in order to pass the certificate files as you can see in the following code listing:
 
@@ -99,13 +99,12 @@ The API Firewall will protect a simple SpringBoot service that is deployed into 
 
 *`Tip: awk '{printf("% 4d %s\n", NR, $0)}' Dockerfile (for printing line numbers)`*
 
-## Running the API Firewall 
+## Running the API Firewall (Guardian)
 
 Let's execute the API Firewall running first the 
 
 ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/firewall_running.png?raw=true)
 
-  
 
 Invoking API Firewall and getting an error in that layer:
 
@@ -118,6 +117,39 @@ Tracing the request in 42Crunch Dashboard:
 ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/Firewall_running_dashboard.png?raw=true)
 
   
+## Certificates 
+
+Anything related to certificates sometimes requires some good attention, this demo is not an exception. However, there is a utility that will help you a lot, it is here on this poc/demo respository: https://github.com/edgars/docker-42c-apifirewall/blob/main/cert-2/idca . In order to make this demonstration to work, I had to add some entries into my /etc/hosts/, where I added the following line:
+
+    #42Crunch Docker sample
+    127.0.0.1 myapis.docker.local
+
+The configuration above allows to refer my localhost/127.0.0.1 as a `'fake'` fully qualified domain (FDQN).
+
+Then I used the simple openssl command line as it follows : 
+
+    openssl req \
+        -newkey rsa:2048 -nodes -keyout firewall-key.pem \
+        -x509 -days 30 -out firewall-cert.pem
+Don't forget to add the information about *FQDN* during the command line questions. 
+
+The generated files shall be used in the `env.list` file, once those certifiacte's information is used by the API Firewall instance. 
+
+You can use also the idca , an utility provided by 42Crunch here: https://github.com/42Crunch/resources/blob/44f01abb7299775d5bb47be1182c5d5e30fd5984/firewall-deployment/tools/idca , please, just download and type the following command:
+
+    ./idca myapis.docker.local 
+
+The command above, will generate your certificates.
+
+```mermaid
+graph LR
+A[idca] -- generates --> B((Circle))
+A --generates --> C(Round Rect)
+B --> D{api firewall}
+C --> D
+```
+
+You can get some ideas in the folder `/cert2` in the repository as well. 
 
 ### Important Docker Commands
 
@@ -223,8 +255,10 @@ That will be result, even if you API is not handling properly the resources and 
 
 | UUID | Same UUID in the 42Crunch Console |
 |:--------:| :--------:|
-| 2bfdd66b-0151-4349-bd28-b45e6232f7a3 | right-aligned |
+| 2bfdd66b-0151-4349-bd28-b45e6232f7a3 | ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/demo-firewall_ok.png?raw=true) |
 
 > Happy Demo/POC
 
 Please, any issue, please open it here in this GitHub repo. Thanks.
+
+
