@@ -105,7 +105,6 @@ Let's execute the API Firewall running first the
 
 ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/firewall_running.png?raw=true)
 
-  
 
 Invoking API Firewall and getting an error in that layer:
 
@@ -224,7 +223,7 @@ That will be result, even if you API is not handling properly the resources and 
 
 | UUID | Same UUID in the 42Crunch Console |
 |:--------:| :--------:|
-| 2bfdd66b-0151-4349-bd28-b45e6232f7a3 | right-aligned |
+| 2bfdd66b-0151-4349-bd28-b45e6232f7a3 | ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/demo-firewall_ok.png?raw=true) |
 
 > Happy Demo/POC
 
