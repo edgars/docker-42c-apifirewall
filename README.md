@@ -46,10 +46,7 @@ Companies from anywhere in the world can introduce security best-practices in th
 
 ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/raw/main/images/flow-with-42crunch.png)
 
-## Focusing on API Firewall
-
-  
-
+## Step 1: Focusing on API Firewall
 In this demo we will focus on the **API Firewall** (Guardian). The first thing we have to do is to go in the 42Crunch platform, and configure the [API Firewall to some specific(s) API(s)](https://42crunch.com/micro-api-firewall-protection), when we do that, we can get a token in order to connect the on-premises Micro API Firewall to the 42Crunch platform running on cloud. You have to the 42Crunch Console's left main menu in the option **Protect**, a Popup will show up, and you will have to select the API from an existing collection that you want to protect. Here a basic demonstration if you have a collection ready to be protected by the API Firewall *(keep in mind that just APIs with a score of more than 70 can be protected by the API Firewall).*
 
   
@@ -66,49 +63,45 @@ As you noticed, you configuration had generated a token, we will must use this l
 
   
 
-## The Dockerfile
+## Step 2: The Dockerfile
 
-As we have many environment variables to pass to the docker image, it is must easier to extend the standard 42Crunch image, and add your whole configurations, as I did in the following code listing:
-
-```
-
-1 FROM 42crunch/apifirewall:latest
-
-2 COPY ./cert/*.pem /opt/guardian/conf/ssl/
-
-3 COPY ./cert/*.key /opt/guardian/conf/ssl/
-
-4 ENV PROTECTION_TOKEN=384f00d7-f547-42cb-8871-3630a843b13f
-
-5 ENV SERVER_NAME=localhost
-
-6 ENV LISTEN_PORT=443
-
-7 ENV TARGET_URL=https://localhost:8080/42crunch-auth0
-
-8 #ENV LISTEN_NO_TLS=1
-
-9 ENV LISTEN_SSL_CERT=fullchain-cert-with-ca.pem
-
-10 ENV LISTEN_SSL_KEY=localhost.key
-
-11 ENV GUARDIAN_INSTANCE_NAME=springboot-sample
-
-12 ENV LOG_LEVEL=debug
-
-13 ENV ERROR_LOG_LEVEL=debug
+We will extend the 42Crunch's default image in order to pass the certificate files as you can see in the following code listing:
 
 ```
+FROM 42crunch/apifirewall:latest
+COPY ./cert-2/myapis.docker.local/*.pem /opt/guardian/conf/ssl/
+COPY ./cert-2/myapis.docker.local/*.key /opt/guardian/conf/ssl/
+```
+When we run the Docker image, we will have to pass the `env.list` file that contains the whole informations and environment variables that we have to pass:
 
-The API Firewall will protect a simple SpringBoot service .
+    #env.list file
+    #Variables used in that Docker machine
+    PROTECTION_TOKEN= #### THAT COMES FROM 42Cruch Platform from the previous step 
+    SERVER_NAME=myapis.docker.local
+    LISTEN_PORT=443
+    #TARGET_URL=https://lbspring.42crunch-ns.207.244.225.188.xip.io/42crunch-auth0
+    TARGET_URL=http://207.244.225.188:32095/42crunch-auth0
+    #ENV LISTEN_NO_TLS=1
+    LISTEN_SSL_CERT=fullchain-cert-with-ca.pem
+    LISTEN_SSL_KEY=myapis.docker.local.key
+    GUARDIAN_INSTANCE_NAME=springboot-sample
+    LOG_LEVEL=debug
+    ERROR_LOG_LEVEL=debug
 
-  
+You can use the following command line in order to execute our Docker Image: 
+
+
+The API Firewall will protect a simple SpringBoot service that is deployed into a Kubernetes/Rancher environment with auto-signed certificates, hosted here: https://lbspring.42crunch-ns.207.244.225.188.xip.io/42crunch-auth0 . If for some reason, you want to tweak this Docker Image as well here is the repository link: https://hub.docker.com/repository/docker/edgars/spring-auth0 
+
+
+----------
+
 
 *`Tip: awk '{printf("% 4d %s\n", NR, $0)}' Dockerfile (for printing line numbers)`*
 
-  
+## Step 3: Running the Firewall 
 
-API Firewall running:
+Let's execute the API Firewall running first the 
 
 ![enter image description here](https://github.com/edgars/docker-42c-apifirewall/blob/main/images/firewall_running.png?raw=true)
 
@@ -129,9 +122,8 @@ Tracing the request in 42Crunch Dashboard:
 
 ### Important Docker Commands
 
-  
-
     docker exec -it <Container_ID> sh
+
 
 # Step by Step Demo
 
