@@ -132,3 +132,108 @@ Tracing the request in 42Crunch Dashboard:
   
 
     docker exec -it <Container_ID> sh
+
+# Step by Step Demo
+
+## Step 1 - Cloning the git repo
+
+Into a VM (vagrant box, or anyone), clone the git repo using the following command:
+
+    git clone https://github.com/edgars/docker-42c-apifirewall.git
+
+    cd docker-42c-apifirewall
+
+
+## Step 2 - Building the Docker Image
+
+Inside the folder docker-42c-apifirewall, please execute the following command:
+
+    $ /docker-42c-apifirewall# docker build . -t edgars/apifirewall
+
+The output would be something like this:
+
+    Sending build context to Docker daemon  19.08MB
+    Step 1/3 : FROM 42crunch/apifirewall:latest
+    latest: Pulling from 42crunch/apifirewall
+    cbdbe7a5bc2a: Pull complete
+    2f3423c94931: Pull complete
+    19c0fc490a22: Pull complete
+    253507af6fbe: Pull complete
+    5aa7a09f5063: Pull complete
+    3098faed39e2: Pull complete
+    3a076437d664: Pull complete
+    98c34d8089f9: Pull complete
+    Digest: sha256:ad317d32edb71a7fd5220aa3b9be55a2b7e1feffd19c86d85c5461f5843acc99
+    Status: Downloaded newer image for 42crunch/apifirewall:latest
+     ---> d801c28de7a3
+    Step 2/3 : COPY ./cert-2/myapis.docker.local/*.pem /opt/guardian/conf/ssl/
+     ---> b28078088550
+    Step 3/3 : COPY ./cert-2/myapis.docker.local/*.key /opt/guardian/conf/ssl/
+     ---> 14623b8b46c5
+    Successfully built 14623b8b46c5
+
+## Step 3 - Running the API Firewall (Guardian)
+Now, we will run the API Firewall, this repo, contains my keys, if you want to change it in order to use yours, please, change the file env.list please.
+
+    $ docker run --env-file env.list -p 8443:443 edgars/apifirewall
+
+The output would be something like this:
+
+    root@ubuntu-bionic:/home/vagrant/docker-42c-apifirewall# docker run --env-file env.list -p 8443:443 edgars/apifirewall
+    squire 0.28.10-release:v0.28.10 : 8470b28cb222203a3121ec7bfdad63a90e3c9956-N :Tue Jan  5 23:41:42 2021 root@4d85136cc398
+    2021/01/05 23:41:42 Connecting platform
+    Dialling platform at 'protection.42crunch.com:8001'...
+    2021/01/05 23:41:43 Connected to 'protection.42crunch.com:8001'
+    2021/01/05 23:41:43 Starting routines (protection)
+    2021/01/05 23:41:43 Registered with remote platform
+    2021/01/05 23:41:44 New configuration received
+    2021/01/05 23:41:44 Writing new configuration...
+    2021/01/05 23:41:44 New configuration persisted
+    2021/01/05 23:41:44 Starting/Reloading API Firewall...
+    2021/01/05 23:41:44 API Firewall started/reloaded
+
+## Step 4 - Testing the API Firewall (Guardian) 
+
+Please, execute the following curl invocation:
+
+    curl -i -k https://myapis.docker.local/xls
+
+The result will be something like this: 
+
+    HTTP/1.1 200 OK
+    Date: Wed, 06 Jan 2021 00:09:13 GMT
+    X-Content-Type-Options: nosniff
+    X-XSS-Protection: 1; mode=block
+    Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+    Pragma: no-cache
+    Expires: 0
+    X-Frame-Options: DENY
+    Content-Type: text/plain;charset=UTF-8
+    Content-Length: 23
+    
+    Hello XLS  - plain text
+
+This request was intercepted and handled by the API Firewall, as this resource exists in the API contract, and also the response pattern allows this response, even in a plan text. However, if you try send a request to a path that does not exists or a http method that is not supported, or any validation or policy is not respected, the API Firewall shimes and let your API safe and secure. 
+
+Check this example:
+
+    curl -i -k https://myapis.docker.local/notexistingpath
+
+The result will be something like: 
+
+    HTTP/1.1 404 Not Found
+    Date: Wed, 06 Jan 2021 00:13:58 GMT
+    Content-Type: application/problem+json
+    Content-Length: 104
+    
+    {"status":404,"title":"path mapping","detail":"Not Found","uuid":"2bfdd66b-0151-4349-bd28-b45e6232f7a3"}
+
+That will be result, even if you API is not handling properly the resources and methods that are not mapped. 
+
+| UUID | Same UUID in the 42Crunch Console |
+|:--------:| :--------:|
+| 2bfdd66b-0151-4349-bd28-b45e6232f7a3 | right-aligned |
+
+> Happy Demo/POC
+
+Please, any issue, please open it here in this GitHub repo. Thanks.
